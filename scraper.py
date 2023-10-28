@@ -1,11 +1,13 @@
 '''
+    this file downloads all the route data for each state in the USA as .csv
+
     1. go to mountainproject.com/route-finder for <state id>
     2. check number of climbing routes
         if # < 1000: 
             export to csv
         if # > 1000:
             export each difficulty lvl to its own csv
-            combine into one mega csv
+            combine into one mega csv? or save for database
     3. proceed to next state id
     
     export directly to csv:
@@ -52,15 +54,24 @@ def get_url(id = 0, minD = 1000, maxD = 12400, preview = True):
 
 
 splitter = 'Sorted by Popularity then Difficulty. Results 1 to ' # 50 of 1000.
+csv_dir = 'csvs/'
 
 for state, id in ids.items():
     page = requests.get(get_url(id)).text
     temp = page.split(splitter)[1][6:10] 
     
     if temp == '1000':
-        print('{} has more than 1000 routes'.format(state))
+        for i in range(1000, 12400, 100):
+            csv = requests.get(get_url(id, i, i, False)).text
+            if not len(csv) == 112:
+                with open(csv_dir + state + str(i) + '.csv', 'w') as outfile:
+                    outfile.write(csv)
 
-# csv = requests.get(get_url(ids['Virginia'], preview=False)).text
-# with open('out.csv', 'w') as of:
-#     of.write(csv)
+    else:
+        csv = requests.get(get_url(id, preview=False)).text
+        with open(csv_dir + state + '.csv', 'w') as outfile:
+            outfile.write(csv)
+
+# csv = requests.get(get_url(ids['California'], 12400, 12400, preview=False)).text
+# print(len(csv))
 
