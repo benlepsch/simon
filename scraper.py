@@ -39,10 +39,11 @@
     i can just go one difficulty level at a time if the csv file has more than 1000 rows
 '''
 
-import json, requests
+import json, requests, asyncio
 
 f = open('states-ids.json')
 ids = json.load(f)
+csv_dir = 'csvs/'
 
 def get_url(id = 0, minD = 1000, maxD = 12400, preview = True):
     base_url = 'https://mountainproject.com/route-finder?selectedIds={}&diffMinrock={}&diffMaxrock={}'
@@ -52,25 +53,32 @@ def get_url(id = 0, minD = 1000, maxD = 12400, preview = True):
         return base_url
     return base_url.split('?')[0] + '-export?' + base_url.split('?')[1]
 
+def get_csv(state, id, minD = 1000, maxD = 12400):
+    csv = requests.get(get_url(id, minD, maxD, False)).text
+    if not len(csv) == 112:
+        fstr = csv_dir + state + (str(minD) if minD == maxD else '') + '.csv'
+        with open(fstr, 'w') as outfile:
+            outfile.write(csv)
+
 
 splitter = 'Sorted by Popularity then Difficulty. Results 1 to ' # 50 of 1000.
-csv_dir = 'csvs/'
+tasks = []
 
-for state, id in ids.items():
-    page = requests.get(get_url(id)).text
-    temp = page.split(splitter)[1][6:10] 
-    
-    if temp == '1000':
-        for i in range(1000, 12400, 100):
-            csv = requests.get(get_url(id, i, i, False)).text
-            if not len(csv) == 112:
-                with open(csv_dir + state + str(i) + '.csv', 'w') as outfile:
-                    outfile.write(csv)
+async def go():
+    for state, id in ids.items():
+        page = requests.get(get_url(id)).text
+        temp = page.split(splitter)[1][6:10] 
+        
+        if temp == '1000':
+            for i in range(1000, 12400, 100):
+                task = asyncio.create_task(get_csv(state, id, i))
+                tasks.append(task)
+        else:
+            task = asyncio.create_task(get_csv(state, id))
 
-    else:
-        csv = requests.get(get_url(id, preview=False)).text
-        with open(csv_dir + state + '.csv', 'w') as outfile:
-            outfile.write(csv)
+    await asyncio.gather(*tasks)
+
+go()
 
 # csv = requests.get(get_url(ids['California'], 12400, 12400, preview=False)).text
 # print(len(csv))
