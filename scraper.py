@@ -39,6 +39,8 @@
     i can just go one difficulty level at a time if the csv file has more than 1000 rows
 '''
 
+# failed: Connecticut, missouri, 
+
 import json, requests, asyncio
 
 f = open('states-ids.json')
@@ -53,7 +55,7 @@ def get_url(id = 0, minD = 1000, maxD = 12400, preview = True):
         return base_url
     return base_url.split('?')[0] + '-export?' + base_url.split('?')[1]
 
-def get_csv(state, id, minD = 1000, maxD = 12400):
+async def get_csv(state, id, minD = 1000, maxD = 12400):
     csv = requests.get(get_url(id, minD, maxD, False)).text
     if not len(csv) == 112:
         fstr = csv_dir + state + (str(minD) if minD == maxD else '') + '.csv'
@@ -66,19 +68,23 @@ tasks = []
 
 async def go():
     for state, id in ids.items():
+        # if (not state == "Connecticut") or (not state == "Missouri"):
+        #     continue
         page = requests.get(get_url(id)).text
         temp = page.split(splitter)[1][6:10] 
         
         if temp == '1000':
             for i in range(1000, 12400, 100):
-                task = asyncio.create_task(get_csv(state, id, i))
+                task = asyncio.create_task(get_csv(state, id, i, i))
                 tasks.append(task)
+            # print('{} has more than 1000'.format(state))
         else:
             task = asyncio.create_task(get_csv(state, id))
+            # pass
 
     await asyncio.gather(*tasks)
 
-go()
+asyncio.run(go())
 
 # csv = requests.get(get_url(ids['California'], 12400, 12400, preview=False)).text
 # print(len(csv))
