@@ -1,24 +1,16 @@
-from flask import Flask
-from flask import render_template, url_for, redirect
-from flask import session, request
-
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import DeclarativeBase
-
-class Base(DeclarativeBase):
-    pass
-
-db = SQLAlchemy(model_class=Base)
-
-app = Flask(__name__)
-app.secret_key = 'bomboclaat'
-
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///project.db'
-db.init_app(app)
+from flask import render_template, redirect, url_for, request, session
+from app import app
+from app.models import User
 
 @app.route("/")
 def index():
     return render_template('index.html')
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        pass
+    return render_template('signup.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
