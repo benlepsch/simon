@@ -1,22 +1,20 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+{% extends "base.html" %}
 
-        <title>Babamooga</title>
-    </head>
-    <body>
-        {% if 'username' in session %}
-        welcome back, {{ session['username'] }}<br>
-        {% endif %}
+{% block head %}
+    <title>Babamooga</title>
+{% endblock %}
 
-        arf arf<br>
-        
-        {% if 'username' not in session %}
-        <a href="/login">log in</a>
-        {% endif %}
-        {% if 'username' in session %}
-        <a href="/logout">log out</a>
-        {% endif %}
-    </body>
-</html>
+{% block body %}
+    {% if 'username' in session %}
+    welcome back, {{ session['username'] }}<br>
+    {% endif %}
+
+    arf arf<br>
+    
+    {% if 'username' not in session %}
+    <a href="/login">log in</a>
+    {% endif %}
+    {% if 'username' in session %}
+    <a href="/logout">log out</a>
+    {% endif %}
+{% endblock %}
