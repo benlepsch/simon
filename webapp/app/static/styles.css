@@ -1,0 +1,14 @@
+nav {
+    text-align: right;
+}
+
+nav > a {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+nav > p {
+    display: inline;
+    padding-left: 10px;
+    padding-right: 10px;
+}

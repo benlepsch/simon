@@ -10,12 +10,4 @@
     {% endif %}
 
     arf arf<br>
-    
-    {% if 'username' not in session %}
-    <a href="/login">log in</a>
-    <a href="/signup">sign up</a>
-    {% endif %}
-    {% if 'username' in session %}
-    <a href="/logout">log out</a>
-    {% endif %}
 {% endblock %}

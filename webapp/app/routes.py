@@ -4,6 +4,13 @@ from app.models import User
 
 import hashlib
 
+def loggedin():
+    try:
+        db.session.execute(db.select(User).filter_by(username=session['username'])).scalar_one()
+    except:
+        return False
+    return True
+
 @app.route('/updatedb')
 def updatedb():
     # upd = ''
@@ -51,6 +58,19 @@ def login():
         session['username'] = uname
         return redirect(url_for('index'))
     return render_template('login.html')
+
+@app.route('/editprofile', methods=['GET','POST'])
+def editprofile():
+    if not loggedin():
+        return redirect(url_for('login'))
+    if request.method == 'POST':
+        updating = db.session.execute(db.select(User).filter_by(username=session['username'])).scalar_one()
+        updating.highest_grade = request.form['highestgrade']
+
+        db.session.commit()
+        return redirect(url_for('editprofile'))
+    hiG = db.session.execute(db.select(User).filter_by(username=session['username'])).scalar_one().highest_grade
+    return render_template('editprofile.html', hg=hiG)
 
 @app.route('/logout')
 def logout():

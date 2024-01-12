@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>Edit Profile</title>
+{% endblock %}
+
+{% block body %}
+<form method="post">
+    <label for="highestgrade">Edit highest grade climbed:</label>
+    <input type=text name="highestgrade" value="{{ hg }}"><br>
+    <button type=submit>Save</button>
+</form>
+{% endblock %}

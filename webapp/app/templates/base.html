@@ -1,11 +1,30 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-        
+        <meta charset="utf-8">
+        <meta name="author" content="Ben Lepsch">
+        <meta name="title" content="Route Recommender">
+        <meta name="description" content="Find climbing routes easily with this dope aa website">
+        <meta name="keywords" content="rock climbing routes search sport trad boulder chalk mer your mn saskek yiolc">
+
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
         {% block head %}{% endblock %}
     </head>
     <body>
+        <nav>
+            {% if 'username' in session %}
+            <p>logged in as: <b>{{ session['username'] }}</b></p>
+            {% endif %}
+            <a href="/">home</a>
+            {% if 'username' not in session %}
+            <a href="/login">log in</a>
+            <a href="/signup">sign up</a>
+            {% endif %}
+            {% if 'username' in session %}
+            <a href="/editprofile">edit profile</a>
+            <a href="/logout">log out</a>
+            {% endif %}
+        </nav>
         {% block body %}{% endblock %}
     </body>
 </html>
