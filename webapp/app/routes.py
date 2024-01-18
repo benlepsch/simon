@@ -77,3 +77,18 @@ def logout():
     # remove the username from the session if it's there
     session.pop('username', None)
     return redirect(url_for('index'))
+
+@app.route('/delaccount')
+def delaccount():
+    if not loggedin():
+        return redirect(url_for('login'))
+    try:
+        user = db.session.execute(db.select(User).filter_by(username=session['username'])).scalar_one()
+        db.session.delete(user)
+        db.session.commit()
+        session.pop('username')
+    except:
+        flash('something broke sorby')
+        return redirect(url_for('index'))
+    flash('account deleted successfully')
+    return redirect(url_for('index'))

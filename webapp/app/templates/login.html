@@ -5,16 +5,6 @@
 {% endblock %}
 
 {% block body %}
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <ul class=flashes>
-        {% for m in messages %}
-        <li>{{ m }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-    {% endwith %}
-
     <form method="post">
         <label for="username">username:</label>
         <input type=text name="username"><br>

@@ -25,6 +25,16 @@
             <a href="/logout">log out</a>
             {% endif %}
         </nav>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class=flashes>
+            {% for m in messages %}
+            <li>{{ m }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+        
         {% block body %}{% endblock %}
     </body>
 </html>

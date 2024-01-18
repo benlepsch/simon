@@ -9,5 +9,10 @@
     <label for="highestgrade">Edit highest grade climbed:</label>
     <input type=text name="highestgrade" value="{{ hg }}"><br>
     <button type=submit>Save</button>
+</form><br>
+
+<button onclick="document.getElementById('delete').disabled = !document.getElementById('delete').disabled ">Delete Account</button>
+<form action="/delaccount">
+    <button disabled id="delete" type=submit>Confirm Delete Account</button>
 </form>
 {% endblock %}
